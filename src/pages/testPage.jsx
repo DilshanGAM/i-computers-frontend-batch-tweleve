@@ -1,69 +1,130 @@
-import { useState } from "react";
-import toast from "react-hot-toast";
+import { useState } from "react"
+
+import toast from "react-hot-toast"
+import uploadMedia from "../lib/uploadMedia"
+
+
+
 
 
 export default function TestPage(){
-    
-    const [status , setStatus] = useState("Off")
-    const [level, setLevel] = useState("1")
 
-    
+    const [file , setFile] = useState(null)
+
+    function uploadFile(){
+
+        uploadMedia(file).then(
+            (res)=>{
+                console.log(res)
+            }
+        ).catch(
+            (err)=>{
+                console.log(err)
+                toast.error("Upload failed")
+            }
+        )
+
+    }
+
+    // async function uploadFileAsync(){
+    //     try{
+    //         const fileUrl = await uploadMedia(file)
+    //         console.log(fileUrl)
+    //     }
+    //     catch(err){
+    //         console.log(err)
+    //         toast.error("Upload failed")
+    //     }
+    // }
 
     return(
-        <div className="w-full h-full flex flex-col  items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center">
+
+            <input type="file"
             
-            <h1 className="text-3xl font-bold">{status}</h1>
+            onChange={
+                (e)=>{
+                    setFile(e.target.files[0])
+                }
+                
+            }/>
 
-            <div className="w-75 h-[50px] flex justify-center items-center">
-
-                <button onClick={
-                    ()=>{
-                        // status = "On"
-                        setStatus("On")
-                        toast.success("The system is now on")
-                    }
-                } className="p-2 text-white m-2 bg-green-600">Turn On</button>
-
-                <button onClick={
-                    ()=>{
-                        setStatus("Off")
-                        toast.error("The system is now off")
-                    }
-                } className="p-2 text-white m-2 bg-red-600">Turn Off</button>
-
-                <button onClick={
-                    ()=>{
-                        setStatus("Idle")
-                        alert("The system is now idle")
-                    }
-                } className="p-2 text-white m-2 bg-yellow-600">Idle</button>
-
-            </div>
-
-            <h1 className="text-3xl font-bold">{level}</h1>
-            <div className="w-75 h-[50px] flex justify-center items-center">
-
-                <button onClick={
-                    ()=>{
-                      setLevel("1")
-                    }
-                } className="p-2 text-white m-2 bg-green-600">1</button>
-                <button onClick={
-                    ()=>{
-                        setLevel("2")
-                    }
-                } className="p-2 text-white m-2 bg-red-600">2</button>
-                <button onClick={
-                    ()=>{
-                        setLevel("3")
-                        setLoading(true)
-                    }
-                } className="p-2 text-white m-2 bg-yellow-600">3</button>
-            </div>
-            
+            <button onClick={uploadFile} className="bg-green-600 text-white p-2 rounded-lg">Submit</button>
         </div>
     )
+
 }
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlpc3lmcXBzcmh5eXhoYW5xa2tsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDE4MjUsImV4cCI6MjA5NzAxNzgyNX0.sagKhV72cFOwxElLB56dehDDFfUQXGxGvGIqlxyOia0
+//https://iisyfqpsrhyyxhanqkkl.supabase.co
+
+
+// import { useState } from "react";
+// import toast from "react-hot-toast";
+
+
+// export default function TestPage(){
+    
+//     const [status , setStatus] = useState("Off")
+//     const [level, setLevel] = useState("1")
+
+    
+
+//     return(
+//         <div className="w-full h-full flex flex-col  items-center justify-center">
+            
+//             <h1 className="text-3xl font-bold">{status}</h1>
+
+//             <div className="w-75 h-[50px] flex justify-center items-center">
+
+//                 <button onClick={
+//                     ()=>{
+//                         // status = "On"
+//                         setStatus("On")
+//                         toast.success("The system is now on")
+//                     }
+//                 } className="p-2 text-white m-2 bg-green-600">Turn On</button>
+
+//                 <button onClick={
+//                     ()=>{
+//                         setStatus("Off")
+//                         toast.error("The system is now off")
+//                     }
+//                 } className="p-2 text-white m-2 bg-red-600">Turn Off</button>
+
+//                 <button onClick={
+//                     ()=>{
+//                         setStatus("Idle")
+//                         alert("The system is now idle")
+//                     }
+//                 } className="p-2 text-white m-2 bg-yellow-600">Idle</button>
+
+//             </div>
+
+//             <h1 className="text-3xl font-bold">{level}</h1>
+//             <div className="w-75 h-[50px] flex justify-center items-center">
+
+//                 <button onClick={
+//                     ()=>{
+//                       setLevel("1")
+//                     }
+//                 } className="p-2 text-white m-2 bg-green-600">1</button>
+//                 <button onClick={
+//                     ()=>{
+//                         setLevel("2")
+//                     }
+//                 } className="p-2 text-white m-2 bg-red-600">2</button>
+//                 <button onClick={
+//                     ()=>{
+//                         setLevel("3")
+//                         setLoading(true)
+//                     }
+//                 } className="p-2 text-white m-2 bg-yellow-600">3</button>
+//             </div>
+            
+//         </div>
+//     )
+// }
 // export default function TestPage(){
 //     return(
 //         <div className="w-full h-full ">
