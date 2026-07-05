@@ -3,19 +3,99 @@ import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import api from "../../lib/api";
 import { CiEdit, CiTrash } from "react-icons/ci";
+import LoadingAnimation from "../../components/loadingAnimation";
+import toast from "react-hot-toast";
+import DeleteProductModal from "../../components/deleteProductModal";
 
 export default function AdminProductsPage() {
 	const [products, setProducts] = useState([]);
-
+	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
 		api.get("/products").then((response) => {
-			console.log(response.data);
-			setProducts(response.data);
+			if (isLoading) {
+				console.log(response.data);
+				setProducts(response.data);
+				setIsLoading(false);
+			}
 		});
-	}, []);
+	}, [isLoading]);
 
+	//Dependancy array
 	//make a backend call to get all products
 	//update the products variable's value with response from backend
+
+	// async function handleDelete(productId){
+	//   const token = localStorage.getItem("token");
+
+	//   const confirmed = confirm("Are you sure you want to delete this product?");
+
+	//   if(!confirmed){
+	//     return;
+	//   }
+
+	//   try{
+	//     await api.delete(`/products/${productId}`, {
+	//       headers: {
+	//         Authorization: `Bearer ${token}`
+	//       }
+	//     });
+	//     toast.success("Product deleted successfully");
+	//     setIsLoading(true);
+	//   }catch(error){
+	//     console.log(error);
+	//   }
+
+	// }
+
+	// function handleDelete(productId) {
+	// 	toast(
+	// 		(t) => {
+	// 			return (
+	// 				<div className="w-[250px] h-[150px]  flex flex-col justify-center items-center gap-4">
+	// 					<h1 className="text-lg font-semibold text-secondary">
+	// 						Are you sure you want to delete this product with ID: {productId}?
+	// 					</h1>
+  //           <div className="flex gap-4 justify-center items-center">
+  //             <button
+  //               className="bg-red-600 text-white px-4 py-2 rounded-md"
+  //               onClick={async () => {
+  //                 const token = localStorage.getItem("token");
+  //                 try {
+  //                   await api.delete(`/products/${productId}`, {
+  //                     headers: {
+  //                       Authorization: `Bearer ${token}`,
+  //                     },
+  //                   });
+  //                   toast.success("Product deleted successfully");
+  //                   setIsLoading(true);
+  //                   toast.dismiss(t.id); // Dismiss the toast after successful deletion
+  //                 } catch (error) {
+  //                   console.log(error);
+  //                   toast.dismiss(t.id); // Dismiss the toast if there's an error
+  //                   toast.error("Failed to delete product"); // Show error toast if deletion fails
+  //                 }
+  //               }}
+  //             >
+  //               Yes
+  //             </button>
+  //             <button
+  //               className="bg-gray-300 text-black px-4 py-2 rounded-md"
+  //               onClick={() => {
+  //                 toast.dismiss(t.id); // Dismiss the toast on cancel
+  //               }}
+  //             >
+  //               No
+  //             </button>
+  //           </div>
+	// 				</div>
+	// 			);
+	// 		},
+	// 		{
+	// 			position: "top-center",
+	// 			duration: Infinity,
+	// 		},
+	// 	);
+	// }
 
 	return (
 		<div className="w-full max-h-full  flex flex-col p-4 items-start gap-0 overflow-y-scroll">
@@ -30,15 +110,27 @@ export default function AdminProductsPage() {
 				// )
 			}
 
-            <div className="w-full h-[100px] bg-white shadow-md rounded-md flex items-center p-4 justify-between mb-8">
-                <h1 className="text-2xl font-semibold text-secondary">Add Product</h1>
-              
-                <div className="flex gap-2">
-                   {products.length} Products                   
-                </div>
-               
-            </div>
-            {/*    
+			<div className="w-full h-[100px] bg-white shadow-md rounded-md flex items-center p-4 justify-between mb-8">
+				{isLoading && <LoadingAnimation />}
+				<h1 className="text-2xl font-semibold text-secondary">Add Product</h1>
+
+				<div className="flex gap-4 justify-center items-center">
+					<span>{products.length} Products</span>
+					<button
+						onClick={() => {
+							//window.location.reload()
+
+							//rerun the function inside the useEffect
+
+							setIsLoading(true);
+						}}
+						className="bg-accent text-white px-4 py-2 rounded-md"
+					>
+						Refresh
+					</button>
+				</div>
+			</div>
+			{/*    
     const [stock, setStock] = useState("")
     const [isAvailable, setIsAvailable] = useState(true)
     const [category, setCategory] = useState("Laptop")
@@ -47,17 +139,17 @@ export default function AdminProductsPage() {
 			<table className="w-full bg-white shadow-md rounded-md overflow-hidden text-center ">
 				<thead className="bg-accent text-white h-[60px]">
 					<tr>
-                        <th>Image</th>
+						<th>Image</th>
 						<th>ProductID</th>
 						<th>Name</th>
 						<th>Price</th>
 						<th>Labelled Price</th>
-                        <th>Stock</th>
-                        <th>Availability</th>
-                        <th>Category</th>
-                        <th>Brand</th>
-                        <th>Model</th>
-                        <th>Actions</th>
+						<th>Stock</th>
+						<th>Availability</th>
+						<th>Category</th>
+						<th>Brand</th>
+						<th>Model</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 
@@ -65,25 +157,36 @@ export default function AdminProductsPage() {
 					{products.map((item) => {
 						return (
 							<tr key={item.productId} className="odd:bg-gray-200">
-                                <td>
-                                    <img src={item.images[0]} alt={item.name} className="w-[50px] h-[50px] object-cover rounded-md" />
-                                </td>
+								<td>
+									<img
+										src={item.images[0]}
+										alt={item.name}
+										className="w-[50px] h-[50px] object-cover rounded-md"
+									/>
+								</td>
 								<td>{item.productId}</td>
 								<td>{item.name}</td>
 								<td>{item.price}</td>
-                                <td>{item.labelledPrice}</td>
-                                <td>{item.stock}</td>
-                                <td>{item.isAvailable?"Available":"Not Available"}</td>
-                                <td>{item.category}</td>
-                                <td>{item.brand}</td>
-                                <td>{item.model}</td>
-                                <td>
-                                    {/* icons only */}
-                                    <div className="flex gap-2 justify-center items-center">
-                                        <CiEdit />
-                                        <CiTrash />
-                                    </div>
-                                </td>
+								<td>{item.labelledPrice}</td>
+								<td>{item.stock}</td>
+								<td>{item.isAvailable ? "Available" : "Not Available"}</td>
+								<td>{item.category}</td>
+								<td>{item.brand}</td>
+								<td>{item.model}</td>
+								<td>
+									{/* icons only */}
+									<div className="flex gap-2 justify-center items-center">
+                    {/* navigate("/admin/edit-product" , {state: item}) */}
+										<Link
+                    state={item}
+                    to="/admin/edit-product"><CiEdit /></Link>
+										{/* <CiTrash
+											className="hover:text-red-600 cursor-pointer"
+											onClick={() => handleDelete(item.productId)}
+										/> */}
+                    <DeleteProductModal product={item} refresh={()=>{setIsLoading(true)}}/>
+									</div>
+								</td>
 							</tr>
 						);
 					})}
