@@ -4,6 +4,7 @@ import { getCartTotal } from '../lib/cart';
 import getFormattedPrice from '../lib/price-format';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import api from '../lib/api';
 import uploadMedia from '../lib/uploadMedia';
 export default function OrderModal(props){
 
@@ -28,10 +29,46 @@ export default function OrderModal(props){
             navigate("/login")
             return
         }
-        
-        // const bankSlipLink = await uploadMedia(file)
 
-        //
+        const orderData = {
+            firstName : firstName,
+            lastName : lastName,
+            addressLine1 : addressLine1,
+            addressLine2 : addressLine2,
+            city : city,
+            postalCode : postalCode,
+            phone : phoneNumber,
+            secondaryPhone : secondaryPhoneNumber,
+            customerNotes : specialNotes,
+            items : []
+        }
+        
+        for(let i=0; i<props.cart.length; i++){
+
+            orderData.items.push({
+                productId : props.cart[i].product.productId,
+                qty : props.cart[i].qty
+            })
+
+        }
+
+        try{
+
+            await api.post("/orders", orderData, {
+                headers : {
+                    Authorization : `Bearer ${token}`
+                }
+            })
+
+            toast.success("Order placed successfully")
+            setModalIsOpen(false)
+            navigate("/products")
+
+        }catch(err){
+            console.log(err)
+            toast.error("Failed to place order")
+        }
+       
     }
 
     return(
