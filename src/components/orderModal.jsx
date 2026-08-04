@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Modal from 'react-modal';
 import { getCartTotal } from '../lib/cart';
 import getFormattedPrice from '../lib/price-format';
@@ -6,11 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../lib/api';
 import uploadMedia from '../lib/uploadMedia';
+import UserContext from '../context/userContext';
 export default function OrderModal(props){
-
+    const userData = useContext(UserContext)
     const [modalIsOpen, setModalIsOpen] = useState(false)
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
+    const [firstName, setFirstName] = useState(userData.user?.firstName ||"")
+    const [lastName, setLastName] = useState(userData.user?.lastName ||"")
     const [addressLine1, setAddressLine1] = useState("")
     const [addressLine2, setAddressLine2] = useState("")
     const [city, setCity] = useState("")
