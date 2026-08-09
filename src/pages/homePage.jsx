@@ -11,7 +11,7 @@ export default function HomePage(){
 
 
     return(
-        <div className="min-h-full w-full bg-primary">
+        <div className="min-h-full w-full bg-primary pb-[80px] lg:pb-0">
             <Header />
             <Routes>
                 <Route path="/" element={<h1>Home Page</h1>} />
