@@ -80,7 +80,7 @@ export default function LoginPage(){
                 if(res.data.isAdmin){
                     //admin dashboard
                     //window.location.href = "/admin"
-                    navigate("/admin")
+                    navigate("/admin" , { replace : true })
                 }else{
                     //homepage
                     //window.location.href = "/"
